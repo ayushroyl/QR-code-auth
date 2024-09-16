@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Verification</title>
+    <title>QR Code Verification</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         body {
@@ -28,25 +28,6 @@
             font-size: 24px;
             margin-bottom: 20px;
         }
-        .container .status {
-            font-size: 18px;
-            margin: 20px 0;
-        }
-        .container .status.success {
-            color: #28a745;
-        }
-        .container .status.failure {
-            color: #dc3545;
-        }
-        .container i {
-            font-size: 50px;
-        }
-        .container .status.success i {
-            color: #28a745;
-        }
-        .container .status.failure i {
-            color: #dc3545;
-        }
         .container button {
             background-color: #007bff;
             color: #fff;
@@ -64,17 +45,15 @@
             width: 100%;
             max-width: 400px;
             margin: 20px auto;
+            display: none;
         }
     </style>
+    <!-- Include the QR code scanner library -->
     <script src="https://unpkg.com/html5-qrcode/minified/html5-qrcode.min.js"></script>
 </head>
 <body>
     <div class="container">
         <h1>QR Code Verification</h1>
-        <div class="status {{ status_class }}">
-            <i class="fas {{ icon }}"></i>
-            <p>{{ message }}</p>
-        </div>
 
         <!-- QR Code Scanner -->
         <button onclick="startScanner()">Scan QR</button>
@@ -96,18 +75,32 @@
 
     <script>
         function startScanner() {
-            const qrScanner = new Html5QrcodeScanner("qr-scanner", { fps: 10, qrbox: 250 });
-            qrScanner.render(onScanSuccess, onScanFailure);
-        }
+            // Show the QR scanner div
+            document.getElementById("qr-scanner").style.display = "block";
 
-        function onScanSuccess(decodedText, decodedResult) {
-            // Handle successful scan and redirect to verification
-            window.location.href = `/?${decodedText}`;
-        }
+            // Create an instance of Html5QrcodeScanner
+            const html5QrCode = new Html5Qrcode("qr-scanner");
 
-        function onScanFailure(error) {
-            // Handle scanning error (optional)
-            console.warn(`QR scan failed: ${error}`);
+            const qrCodeSuccessCallback = (decodedText, decodedResult) => {
+                // Handle successful scan, decodedText is the text found in the QR code
+                alert(`QR Code detected: ${decodedText}`);
+                window.location.href = `/?id=${decodedText}`;  // Redirect to verify the QR code
+            };
+
+            const qrCodeErrorCallback = (errorMessage) => {
+                // Handle scan failure, could log the error if necessary
+                console.log(`QR Code scan error: ${errorMessage}`);
+            };
+
+            const config = { fps: 10, qrbox: { width: 250, height: 250 } };
+
+            // Start the scanner with camera settings
+            html5QrCode.start({ facingMode: "environment" }, config, qrCodeSuccessCallback, qrCodeErrorCallback)
+                .catch(err => {
+                    // Handle initialization errors
+                    console.error(`Error starting QR code scanner: ${err}`);
+                    alert("Unable to access the camera. Please check your browser settings.");
+                });
         }
 
         function openAdminLogin() {
