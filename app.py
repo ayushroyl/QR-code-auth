@@ -24,7 +24,7 @@ def verify():
         message = "Verification failed: Invalid name or ID"
 
     # Render the verify.html page with the result
-    return render_template('main.html', status_class=status_class, icon=icon, message=message)
+    return render_template('index.html', status_class=status_class, icon=icon, message=message)
 
 
 if __name__ == "__main__":
