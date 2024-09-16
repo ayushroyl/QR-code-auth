@@ -60,7 +60,13 @@
         .container button:hover {
             background-color: #0056b3;
         }
+        #qr-scanner {
+            width: 100%;
+            max-width: 400px;
+            margin: 20px auto;
+        }
     </style>
+    <script src="https://unpkg.com/html5-qrcode/minified/html5-qrcode.min.js"></script>
 </head>
 <body>
     <div class="container">
@@ -69,7 +75,67 @@
             <i class="fas {{ icon }}"></i>
             <p>{{ message }}</p>
         </div>
-        <button onclick="window.location.href='https://ayushroyl.github.io/profile/'">Go Home</button>
+
+        <!-- QR Code Scanner -->
+        <button onclick="startScanner()">Scan QR</button>
+        <div id="qr-scanner"></div>
+
+        <!-- Admin Login -->
+        <button onclick="openAdminLogin()">Admin Login</button>
+
+        <!-- Admin Login Modal -->
+        <div id="admin-login-modal" style="display: none;">
+            <h2>Admin Login</h2>
+            <form id="admin-login-form" onsubmit="return adminLogin(event)">
+                <input type="text" id="username" placeholder="Username" required><br><br>
+                <input type="password" id="password" placeholder="Password" required><br><br>
+                <button type="submit">Login</button>
+            </form>
+        </div>
     </div>
+
+    <script>
+        function startScanner() {
+            const qrScanner = new Html5QrcodeScanner("qr-scanner", { fps: 10, qrbox: 250 });
+            qrScanner.render(onScanSuccess, onScanFailure);
+        }
+
+        function onScanSuccess(decodedText, decodedResult) {
+            // Handle successful scan and redirect to verification
+            window.location.href = `/?${decodedText}`;
+        }
+
+        function onScanFailure(error) {
+            // Handle scanning error (optional)
+            console.warn(`QR scan failed: ${error}`);
+        }
+
+        function openAdminLogin() {
+            document.getElementById("admin-login-modal").style.display = "block";
+        }
+
+        function adminLogin(event) {
+            event.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            // Send a request to the Flask backend for admin login
+            fetch("/admin-login", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ username, password })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    window.location.href = "/admin-dashboard";
+                } else {
+                    alert("Invalid login credentials.");
+                }
+            });
+        }
+    </script>
 </body>
 </html>
