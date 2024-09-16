@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verification</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+        .container {
+            text-align: center;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 90%;
+            max-width: 500px;
+        }
+        .container h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        .container .status {
+            font-size: 18px;
+            margin: 20px 0;
+        }
+        .container .status.success {
+            color: #28a745;
+        }
+        .container .status.failure {
+            color: #dc3545;
+        }
+        .container i {
+            font-size: 50px;
+        }
+        .container .status.success i {
+            color: #28a745;
+        }
+        .container .status.failure i {
+            color: #dc3545;
+        }
+        .container button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        .container button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>QR Code Verification</h1>
+        <div class="status {{ status_class }}">
+            <i class="fas {{ icon }}"></i>
+            <p>{{ message }}</p>
+        </div>
+        <button onclick="window.location.href='https://ayushroyl.github.io/profile/'">Go Home</button>
+    </div>
+</body>
+</html>
